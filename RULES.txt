@@ -1,0 +1,28 @@
+ORDER OF PLAY
+1.12	To start the first game the players decide by random selection which colour they will play. In subsequent games the players alternate colours.
+1.13	The first move in each game is made by the player with the Red men; thereafter the moves are made by each player in turn ( ). 
+
+THE MOVES 
+1.14	There are fundamentally 4 types of move: the ordinary move of a man, the ordinary move of a king, the capturing move of a man and the capturing move of a king. 
+
+Ordinary Move Of A Man
+1.15	An ordinary move of a man is its transfer diagonally forward left or right from one square to an immediately neighbouring vacant square. (Also see Rule 1.18)
+1.16	When a man reaches the farthest row forward (known as the “king-row” or “crown-head”) it becomes a king, and this completes the turn of play. The man can be crowned by either player by placing a man of the same colour on top of it before the next move is made. (It may be necessary to borrow from another set if no captured man is available for the purpose). 
+
+Ordinary Move Of A King 
+1.17	An ordinary move of a king (crowned man) is from one square diagonally forward or backward, left or right, to an immediately neighbouring vacant square. 
+
+Capturing Move Of A Man 
+1.18	A capturing move of a man is its transfer from one square over a diagonally adjacent and forward square occupied by an opponent`s piece (man or king) and on to a vacant square immediately beyond it. (A capturing move is called a "jump"). On completion of the jump the captured piece is removed from the board.
+
+Capturing In General
+1.19	If a jump creates an immediate further capturing opportunity, then the capturing move of the piece (man or king) is continued until all the jumps are completed. The only exception is that if a man reaches the king-row by means of a capturing move it then becomes a king but may not make any further jumps until their opponent has moved.  At the end of the capturing sequence, all captured pieces are removed from the board.
+1.20	All capturing moves are compulsory, whether offered actively or passively. If there are two or more ways to jump, a player may select any one that they wish, not necessarily that which gains the most pieces. Once started, a multiple jump must be carried through to completion. A man can only be jumped once during a multiple jumping sequence.
+
+Capturing Move Of A King
+1.21	A capturing move of a king is similar to that of a man, but may be in a forward or backward direction.
+
+DEFINITION OF A WIN
+1.30	The game is won by the player who can make the last move; that is, no move is available to the opponent on their turn to play, either because all their pieces have been captured or their remaining pieces are all blocked.
+
+
