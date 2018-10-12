@@ -164,6 +164,8 @@ public class GameManager {
         return false;
     }
 
+
+    //verifies whether the selected origin is occupied by a Checker of the current player
     private int selectedOriginOK(int line, int column){
         if (colorOf(board[line][column]) == colorOf(playerTurn)){
             lineOrigin = line;
@@ -173,6 +175,7 @@ public class GameManager {
         return INVALID_SPACE;
     }
 
+    //verifies whether the selected origin is empty and adjacent to the origin or configures a capture
     private int selectedEndOK(int lineSelected, int columnSelected){
 
         int columnDelta = columnSelected - columnOrigin;

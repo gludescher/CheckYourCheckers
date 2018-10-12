@@ -3,4 +3,5 @@
     <string name="start_game">Start Game</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
+    <string name="play_again">Play Again?</string>
 </resources>

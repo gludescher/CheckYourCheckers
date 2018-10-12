@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,11 +32,16 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     TextView textPlayer1;
     TextView textPlayer2;
 
+    TextView textPlayAgain;
+    Button buttonYes, buttonNo;
+    ImageView imagePlayAgain;
+
     String namePlayer1;
     String namePlayer2;
 
     int[] selectedSpace = new int[2];
     int[] selectedOrigin = new int[2];
+
 
     GameManager gameManager;
 
@@ -47,6 +53,13 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         Intent getFromMain = getIntent();
         namePlayer1 = getFromMain.getStringExtra("namePlayer1");
         namePlayer2 = getFromMain.getStringExtra("namePlayer2");
+
+        imagePlayAgain = (ImageView) findViewById(R.id.imagePlayAgain);
+        textPlayAgain = (TextView) findViewById(R.id.textPlayAgain);
+        buttonNo = (Button) findViewById(R.id.buttonNah);
+        buttonNo.setOnClickListener(this);
+        buttonYes = (Button) findViewById(R.id.buttonYes);
+        buttonYes.setOnClickListener(this);
 
         textPlayer1 = (TextView) findViewById(R.id.textPlayer1);
         textPlayer1.setText(namePlayer1);
@@ -177,6 +190,28 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.buttonNah:
+                Intent in = new Intent(this, MainActivity.class);
+                startActivity(in);
+
+                imagePlayAgain.setVisibility(View.GONE);
+                textPlayAgain.setVisibility(View.GONE);
+                buttonYes.setVisibility(View.GONE);
+                buttonNo.setVisibility(View.GONE);
+                break;
+
+            case R.id.buttonYes:
+                gameManager = new GameManager();
+                displayCurrentTurn(gameManager.getPlayerTurn());
+
+                imagePlayAgain.setVisibility(View.GONE);
+                textPlayAgain.setVisibility(View.GONE);
+                buttonYes.setVisibility(View.GONE);
+                buttonNo.setVisibility(View.GONE);
+                textPlayer1.setText(namePlayer1);
+                textPlayer2.setText(namePlayer2);
+                break;
+
             case R.id.buttonSpace01:
                 selectedSpace[0] = 0;
                 selectedSpace[1] = 1;
@@ -376,6 +411,11 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
                 textPlayer2.setText(namePlayer2 + " lost =c");
                 break;
         }
+
+        imagePlayAgain.setVisibility(View.VISIBLE);
+        textPlayAgain.setVisibility(View.VISIBLE);
+        buttonYes.setVisibility(View.VISIBLE);
+        buttonNo.setVisibility(View.VISIBLE);
     }
 
     public void displayCurrentTurn(int player) {
