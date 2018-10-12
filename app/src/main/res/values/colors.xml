@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="neonGreen">#99FF99</color>
+    <color name="darkBlue">#000010</color>
+    <color name="neonBlue">#00ffff</color>
+    <color name="transparentNeonBlue">#7F00ffff</color>
+    <color name="green">#41ff33</color>
+
+</resources>
