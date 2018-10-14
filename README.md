@@ -58,16 +58,13 @@ Offical rules: http://www.usacheckers.com/downloads/WCDF_Revised_Rules.doc
         results of the methods selectedOriginOK() and selectedEndOK(). It is called everytime a button is pressed
         on the BoardActivity and responds with an error code or correctness confirmation.
         
-        3.3.2. GameManager.lookForHunters(): As it is in the rules of the game, if a Checker may capture an 
-        opponent's Checker, it MUST capture it. Therefore, at the start of each round, this functions verifies
+        3.3.2. GameManager.canMoveOrCapture(): As it is in the rules of the game, if a Checker may capture an 
+        opponent's Checker, it MUST capture it. Therefore, at the start of each round, this method verifies
         if any of the Checkers of the current player is a "Hunter", that is, it can capture another Checker.
-        If so, the player won't be able to do any move besides a capture. 
+        If so, the player won't be able to do any move besides a capture. Also, this method verifies if the
+        current player has available moves. If not, the current player loses the game, as the rules determine.
         
-        3.3.3 GameManager.isHunter(int space): This is a complement of the function above. It checks if there are any 
-        adjacent opposing Checkers to the one that is passed and, if so, it is verified whether the space right
-        "behind" the checker that can be captured is empty. Being those conditions true, it returns true.
-        
-        3.3.4. GameManager.colorOf(int space) and GameManager.valueOf(space): These methods return, respectively, the 
+        3.3.3. GameManager.colorOf(int space) and GameManager.valueOf(space): These methods return, respectively, the 
         values of Math.abs() and Math.signum(), as those functions can be used to find information about a Checker.
         The used of those methods is purely for cleanliness of code.
         
