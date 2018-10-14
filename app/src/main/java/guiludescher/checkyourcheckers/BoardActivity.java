@@ -15,7 +15,8 @@ import static guiludescher.checkyourcheckers.GameManager.BORDER;
 import static guiludescher.checkyourcheckers.GameManager.CAPTURE_OK;
 import static guiludescher.checkyourcheckers.GameManager.DARK;
 import static guiludescher.checkyourcheckers.GameManager.EMPTY;
-import static guiludescher.checkyourcheckers.GameManager.END_OF_GAME;
+import static guiludescher.checkyourcheckers.GameManager.EOG_NO_CHECKERS;
+import static guiludescher.checkyourcheckers.GameManager.EOG_NO_MOVES;
 import static guiludescher.checkyourcheckers.GameManager.INVALID_SPACE;
 import static guiludescher.checkyourcheckers.GameManager.LIGHT;
 import static guiludescher.checkyourcheckers.GameManager.MOVE_OK;
@@ -344,8 +345,11 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
 
-        int result = gameManager.nextStepInRound(selectedSpace[0], selectedSpace[1]);
-        switch (result) {
+        int winner;
+        String loserName;
+
+        //int result = gameManager.nextStepInRound(selectedSpace[0], selectedSpace[1]);
+        switch (gameManager.nextStepInRound(selectedSpace[0], selectedSpace[1])) {
             case INVALID_SPACE:
                 Toast.makeText(getApplicationContext(), "Select a valid space!", Toast.LENGTH_SHORT).show();
                 break;
@@ -362,8 +366,23 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
             case CAPTURE_OK:
                 displayCurrentTurn(gameManager.getPlayerTurn());
                 break;
-            case END_OF_GAME:
-                displayWinner(gameManager.getWinner());
+            case EOG_NO_CHECKERS:
+                winner = gameManager.getWinner();
+                if (winner == DARK)
+                    loserName = namePlayer1;
+                else
+                    loserName = namePlayer2;
+                Toast.makeText(getApplicationContext(), loserName + " has no checkers left!", Toast.LENGTH_SHORT).show();
+                displayWinner(winner);
+            case EOG_NO_MOVES:
+                winner = gameManager.getWinner();
+                if (winner == DARK)
+                    loserName = namePlayer1;
+                else
+                    loserName = namePlayer2;
+                Toast.makeText(getApplicationContext(), loserName + " has no moves left!", Toast.LENGTH_SHORT).show();
+                displayWinner(winner);
+                break;
             default:
                 break;
         }

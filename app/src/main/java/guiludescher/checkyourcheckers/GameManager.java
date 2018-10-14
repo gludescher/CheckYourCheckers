@@ -17,7 +17,12 @@ public class GameManager {
     public static final int CAPTURE_OK = 102;
     public static final int INVALID_SPACE = 200;
     public static final int MUST_CAPTURE = 201;
-    public static final int END_OF_GAME = 300;
+    public static final int EOG_NO_MOVES = 300;
+    public static final int EOG_NO_CHECKERS = 301;
+
+    public static final int CAN_MOVE = 400;
+    public static final int CAN_CAPTURE = 401;
+    public static final int NO_MOVES = 402;
 
     public static final int N_STARTING_PIECES = 12;
     public static final int BORDER = 8;
@@ -29,9 +34,9 @@ public class GameManager {
     private boolean isCapturing;
 
     private int columnOrigin, lineOrigin, columnEnd, lineEnd;
-    private boolean mustCapture;
+    private boolean mustCapture, movesAvailable = true;
 
-    private int nDarkCheckers, nLightCheckers;
+    private int nDarkCheckers, nLightCheckers, winner;
 
     public GameManager(){
 
@@ -40,6 +45,7 @@ public class GameManager {
         roundState = WAITING_ORIGIN_INPUT;
         playerTurn = DARK;
         isCapturing = false;
+        movesAvailable = true;
     }
 
     private void initializeBoard(){
@@ -67,6 +73,11 @@ public class GameManager {
 
         switch (this.roundState) {
             case WAITING_ORIGIN_INPUT:
+                if (!movesAvailable) {
+                    winner = -1*playerTurn;
+                    return EOG_NO_MOVES;
+                }
+
                 if (selectedOriginOK(line, column) == SPACE_OK) {
                     this.roundState = WAITING_END_INPUT;
                     return SPACE_OK;
@@ -92,8 +103,10 @@ public class GameManager {
                             return CAPTURE_OK;
                         }
                         makeCapture();
-                        if (isEndOfGame())
-                            return END_OF_GAME;
+                        if (zeroCheckers()) {
+                            winner = (int) Math.signum(nLightCheckers - nDarkCheckers);
+                            return EOG_NO_CHECKERS;
+                        }
                         isCapturing = true;
                         if (isHunter(lineEnd, columnEnd)) {
                             lineOrigin = lineEnd;
@@ -115,32 +128,65 @@ public class GameManager {
         this.roundState = WAITING_ORIGIN_INPUT;
         playerTurn *= -1;
         isCapturing = false;
-        mustCapture = false;
-        mustCapture = lookForHunters();
+        //cantMove = lookForHunters();
+        switch (canMoveOrCapture()){
+            case CAN_CAPTURE:
+                mustCapture = true;
+                movesAvailable = true;
+                break;
+            case CAN_MOVE:
+                mustCapture = false;
+                movesAvailable = true;
+                break;
+            case NO_MOVES:
+                mustCapture = false;
+                movesAvailable = false;
+                break;
+        }
+
     }
 
     /* The same way as it happens in the wild, here, the 'hunter' captures its prey for a nice feast.
      * In the game of Checkers, if one CAN capture an opponent's checker, one MUST capture it.
      * Also, if there are two or more possible captures, the player may choose between them.
      */
-    private  boolean lookForHunters () {
+    private int canMoveOrCapture () {
         int i, j;
-        for (i = 0; i < BORDER;  i++){
-            for (j = 0; j < BORDER; j++) {
+        boolean hasMoves = false;
+        //this makes the verification start from the most forward checker for each color, that is
+        //the ones with most chances of capture
+        if (this.playerTurn == LIGHT) {
+            for (i = 0; i < BORDER; i++) {
+                for (j = 0; j < BORDER; j++) {
+                    //only check for spaces that can be used and current player's pieces
+                    if (i % 2 != j % 2 && colorOf(this.board[i][j]) == this.playerTurn) {
+                        if (isHunter(i, j)) return CAN_CAPTURE;
 
-                //only check for spaces that can be used and current player's pieces
-                if (i % 2 != j % 2 && colorOf(this.board[i][j]) == this.playerTurn) {
-                    if (isHunter(i, j)) return true;
+                        //if a piece can move, no need to check for other pieces, only checking for hunters
+                        else if (!hasMoves) hasMoves = isMover(i, j);
+                    }
                 }
             }
         }
-        return false;
+
+        else if (this.playerTurn == DARK) {
+            for (i = 7; i >= 0; i--) {
+                for (j = 7; j >= 0; j--) {
+                    //only check for spaces that can be used and current player's pieces
+                    if (i % 2 != j % 2 && colorOf(this.board[i][j]) == this.playerTurn) {
+                        if (isHunter(i, j)) return CAN_CAPTURE;
+                        else if (!hasMoves) hasMoves = isMover(i, j);
+                    }
+                }
+            }
+        }
+        if (hasMoves) return CAN_MOVE;
+        return NO_MOVES;
     }
 
     private boolean isHunter (int line, int column){
         int linePrey, columnPrey, lineHunt, columnHunt;
-        int i, j, n;
-        i = 1; j = 1; n = 0;
+        int i = 1, j = 1, n = 0;
         int hunter = board[line][column];
         int prey;
 
@@ -154,6 +200,29 @@ public class GameManager {
                 prey = board[linePrey][columnPrey];
                 if (colorOf(prey) == -1*playerTurn && board[lineHunt][columnHunt] == EMPTY &&
                         (colorOf(hunter) == -1*i || valueOf(hunter) == QUEEN))
+                    return true;
+            }
+
+            if (n % 2 == 0) i *= -1;
+            else j *= -1;
+            n++;
+        }
+        return false;
+    }
+
+    private boolean isMover (int line, int column) {
+        int lineDestiny, columnDestiny;
+        int i = 1, j = 1, n = 0;
+        int spaceDestiny;
+        int mover = board[line][column];
+
+        while (n <= 3) {
+            lineDestiny = line + i;
+            columnDestiny = column + j;
+
+            if (isWithinBorders(lineDestiny, columnDestiny)){
+                spaceDestiny = board[lineDestiny][columnDestiny];
+                if (spaceDestiny == EMPTY && (colorOf(mover) == -1*i || valueOf(mover) == QUEEN))
                     return true;
             }
 
@@ -279,16 +348,12 @@ public class GameManager {
         return false;
     }
 
-    private boolean isEndOfGame (){
+    private boolean zeroCheckers (){
         return (nDarkCheckers == 0 || nLightCheckers == 0);
     }
 
-    public int getWinner() {
-        if (nDarkCheckers == 0)
-            return LIGHT;
-        if (nLightCheckers == 0)
-            return DARK;
-        return 0;
+   public int getWinner() {
+        return winner;
     }
 
     public int getPlayerTurn(){
